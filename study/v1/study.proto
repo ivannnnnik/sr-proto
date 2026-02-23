@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package study.v1;
+
+option go_package = "github.com/ivannnnnik/sr-proto/gen/go/study/v1;studyv1";
+
+message StudyProgress {
+  string id = 1;
+  string user_id = 2;
+  string question_id = 3;
+  double ease_factor = 4;    // SM-2: фактор лёгкости (default 2.5)
+  int32 interval = 5;        // дней до следующего повторения
+  int32 repetitions = 6;     // сколько раз повторил
+  string next_review_at = 7;
+  string last_reviewed_at = 8;
+}
+
+message SubmitAnswerRequest {
+  string user_id = 1;
+  string question_id = 2;
+  int32 quality = 3;         // оценка 0-5 (SM-2)
+}
+
+message SubmitAnswerResponse {
+  StudyProgress progress = 1;
+}
+
+message GetProgressRequest {
+  string user_id = 1;
+}
+
+message GetProgressResponse {
+  repeated StudyProgress items = 1;
+}
+
+service StudyService {
+  rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  rpc GetProgress(GetProgressRequest) returns (GetProgressResponse);
+}
